@@ -6,5 +6,15 @@ class Player < ApplicationRecord
          :recoverable,
          :rememberable,
          :trackable,
-         :validatable
+          :validatable,
+          :authentication_keys => [:username]
+
+  def email_required?
+    false
+  end
+
+  def email_changed?
+    false
+  end
+
 end

@@ -1,0 +1,14 @@
+<% if player_signed_in? %>
+  <%= link_to "log out", destroy_player_session_path, method: :delete %>
+  <br>
+  Hello <%= current_player.username %>
+  <% else %>
+  <%= link_to "log in", new_player_session_path %>
+<% end %>
+
+<br>
+
+<br>
+<%= link_to "sign in", new_player_registration_path %>
+<br>
+<%= link_to "edit", edit_player_registration_path %>
