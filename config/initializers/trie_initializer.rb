@@ -2,12 +2,15 @@
 # calliope's dictionnary
 
 Rails.application.config.after_initialize do
+  SHIRITORI_DIC = get_shiritori_dic()
+end
 
+def get_shiritori_dic
   require 'trie'
   dicpath = Rails.root.join('lib', 'assets', 'gutenberg-utf8.txt')
 
-  BENCHMARK = false
-  if BENCHMARK
+  do_benchmark = false
+  if do_benchmark
     puts "yolo"
     Benchmark.bm do |x|
       rambling_trie = nil
@@ -25,7 +28,8 @@ Rails.application.config.after_initialize do
     puts "yoli"
   end
 
-  TRIE = Trie.new
-  IO.foreach(dicpath) do |word| TRIE.add word.chomp end
+  dic = Trie.new
+  IO.foreach(dicpath) do |word| dic.add word.chomp end
 
+  dic
 end
