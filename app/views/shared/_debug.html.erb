@@ -1,14 +1,22 @@
-<% if player_signed_in? %>
-  <%= link_to "log out", destroy_player_session_path, method: :delete %>
-  <br>
-  Hello <%= current_player.username %>
-  <% else %>
-  <%= link_to "log in", new_player_session_path %>
-<% end %>
+<div style="width:100%; border: 2px dotted black; height: 150px; padding: 5px;">
+  <div style="display:inline-block; width:200px;">
+    <% if player_signed_in? %>
+      <%= link_to "log out", destroy_player_session_path, method: :delete %>
+      <br>
+      Hello <%= current_player.username %>
+      <% else %>
+      <%= link_to "log in", new_player_session_path %>
+    <% end %>
 
-<br>
+    <br>
 
-<br>
-<%= link_to "sign in", new_player_registration_path %>
-<br>
-<%= link_to "edit", edit_player_registration_path %>
+    <br>
+    <%= link_to "sign in", new_player_registration_path %>
+    <br>
+    <%= link_to "edit", edit_player_registration_path %>
+  </div>
+
+  <div style="display:inline-block; width:200px;">
+    Trie has key "staminaux" ? : <%= TRIE.has_key?('staminaux') %>
+  </div>
+</div>
