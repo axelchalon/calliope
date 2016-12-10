@@ -1,0 +1,200 @@
+// Main CLASSES
+
+.game__container {
+	//position
+	margin: auto;
+	margin-top: 2.5%;
+	text-align: center;
+	//size
+	height: 540px;
+	width: 700px;
+	//style
+	background-color: #EEEEEE;
+	border-radius: 5px;
+}
+.game-score__container{
+	//position
+	display: inline-block;
+	vertical-align: top;
+	margin: auto;
+	margin-top: 35px;
+	//size
+	height: 90px;
+	width: 90px;
+	//content
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+}
+
+// ------ GAME-BOARD  ------ 
+
+.game-board{
+	//position
+	display: inline-block;
+	vertical-align: top;
+	margin: auto;
+	margin-top: 2.5%;
+	//size
+	height: 500px;
+	width: 400px;
+	//content
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+}
+
+.game-board__error{
+	//position
+	margin-top: 30px;
+	//content
+	font-size: 12px;
+	color: #C64F4F;
+	font-family: 'Lato', sans-serif;
+	font-weight: 600;
+
+}
+.game-board__error__alreadyWritten{
+	//position
+	display: none;
+}
+
+.game-board__error__doesntExist{
+	//position
+	//display: none;
+}
+
+.game-board__playBox{
+	width: 282px;
+	//position
+	margin: auto;
+	margin-top: 12px;
+}
+
+.game-board__writtingBox{
+	//size
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	width: 260px;
+	//style
+	background: #E8E8E8;
+	border: 1px solid #D8D8D8;
+	//content
+	text-align: left;
+	font-family: 'Lato', sans-serif;
+	font-weight: 600;
+	vertical-align: middle;
+	color: #434E67;
+}
+
+.game-board__timer{
+	//size
+	width: 282px;
+	height: 4px;
+	//style
+	background-color: #6DBC79;
+}
+
+.game-board__archive{
+	//position
+	margin:auto;
+	margin-top: 40px;
+	//size
+	width: 282px;
+	height: 300px;
+	vertical-align: bottom;
+	//content
+	overflow: scroll;
+}
+
+
+.game-board__previousWord__player{
+	//size
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 10px;
+	width: 140px;
+	//style
+	background: #E8E8E8;
+	border: 1px solid #D8D8D8;
+	//position
+	margin-top: 20px;
+
+	//content
+	font-size: 14px;
+	text-align: left;
+	font-weight: 600;
+	color: #969696;
+}
+
+.game-board__previousWord__adversary{
+	//size
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 10px;
+	width: 140px;
+	//style
+	background: #E8E8E8;
+	border: 1px solid #D8D8D8;
+	//position
+	margin-top: 20px; 
+	display: block;
+	margin-left: auto;
+	margin-right: 0;
+	//content
+	font-size: 14px;
+	text-align: left;
+	font-weight: 600;
+	color: #969696;
+}
+
+.game-board__abandon{
+	//position
+	margin-top: 30px;
+	//content
+	font-size: 12px;
+	color: #969696;
+	font-family: 'Lato', sans-serif;
+	font-weight: 400;
+	font-style: italic;
+}
+
+
+// ------ SCORE ------ 
+
+.player{
+	//style
+	font-size: 14px;
+}
+
+.myScore {
+	//content
+	text-align: left;
+}
+
+.adversaryScore{
+	//position
+	margin-left: 10px;
+	//content
+	text-align: right;
+}
+
+.score{
+	margin-top: 16px;
+	font-size: 54px;
+	}
+
+// SCORE STATUS 
+
+.winning{
+	color: #6DBC79;
+
+}
+
+.losing{
+color: #C64F4F;
+}
+
+.notPlaying{
+	color: #969696;
+}
+

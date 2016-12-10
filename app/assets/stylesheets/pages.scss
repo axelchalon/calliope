@@ -1,3 +1,91 @@
 // Place all the styles related to the pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// GENERIC CLASSES
+
+body {
+	background-color:#434E67;
+	width: 100%;
+	font-family: 'Lato', sans-serif;
+	font-size: 16px;
+}
+
+button {
+	background-color:#434E67;
+	font-family: 'Lato', sans-serif;
+	font-color : #EEEEEE; 
+}
+
+// HEADER
+
+header{
+	background-color: #3E475C;
+	width: 100%;
+	height: 80px; 
+}
+
+.profile-access {
+	width: 240px;
+	height: 100%;
+	float: right;
+}
+
+.profile-access__image {
+	display: inline-block;
+	background-color: #F6F6F6;
+	width: 50px;
+	height: 50px; 
+	margin-top: 15px;
+	border-radius: 50%;
+}
+
+.profile-access__name {
+	display: inline-block;
+	color: #F6F6F6;
+	font-family: 'Lato', sans-serif;
+	letter-spacing: 0;
+	float: right;
+	margin-right: 100px;
+	margin-top: 30px;
+}
+// MAIN CONTENT
+
+.content-container{
+	margin: auto;
+	margin-top: 6%;
+	width: 944px;
+	height: 454px;
+}
+
+.content{
+	font-family: 'Lato', sans-serif;
+	display: inline-block;
+	vertical-align: middle;
+	background-color: #EEEEEE;
+	border-radius: 5px;
+	width: 400px;
+	height: 450px;
+}
+
+.rules{
+	margin-left: 140px;
+}
+
+.rules__title{
+	font-family: 'Lato', sans-serif;
+	font-weight: 800;
+	margin: auto;
+	font-size: 16px;
+}
+.rules__text{
+	margin: auto;
+	margin-top: 40px;
+	overflow: scroll;
+	height: 300px;
+	width: 65%;	
+	font-size: 14px;
+	line-height: 1.4;
+	color: #969696;
+}
+
