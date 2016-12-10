@@ -1,3 +1,5 @@
+# game_id => {uids: [a,b], words_player0: {duree_que_ca_a_pris_a_trouver_et_a_ecrire: X, mot: Y}, words_player1: {}, next_player:int, last_letter:str,  last_move_timestamp:int}
+
 class ActionModels::Game
   def self.start(uuid1, uuid2)
     white, black = [uuid1, uuid2].shuffle
@@ -30,7 +32,6 @@ class ActionModels::Game
 
   def self.play_word(uuid, word)
     opponent = opponent_for(uuid)
-
     # @TODO VERIFY IF WORD IS VALID
 
     ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_plays", msg: word}

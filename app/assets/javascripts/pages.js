@@ -35,5 +35,5 @@ App.channel = App.cable.subscriptions.create({channel: "GameChannel"}, {
 
 function playWord(word)
 {
-  App.channel.perform("play_word", word)
+  App.channel.perform("play_word", {word: word})
 }

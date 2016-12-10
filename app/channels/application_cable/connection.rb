@@ -5,6 +5,7 @@ module ApplicationCable
     def connect
       puts "CONNECTION."
       self.uuid = SecureRandom.uuid
+      @toasterette = "Toasterette"
     end
   end
 end
