@@ -17,4 +17,8 @@ class Player < ApplicationRecord
     false
   end
 
+  def games
+    Game.where(player1_id: id).or(Game.where(player2_id: id))
+  end
+
 end
