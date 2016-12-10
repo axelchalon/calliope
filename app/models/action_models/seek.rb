@@ -1,4 +1,4 @@
-class Seek
+class ActionModels::Seek
   def self.create(uuid)
     if opponent = REDIS.spop("seeks")
       Game.start(uuid, opponent)

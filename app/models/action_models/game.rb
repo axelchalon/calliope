@@ -1,4 +1,4 @@
-class Game
+class ActionModels::Game
   def self.start(uuid1, uuid2)
     white, black = [uuid1, uuid2].shuffle
 
