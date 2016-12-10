@@ -12,19 +12,28 @@ this.App = {};
 var log = console.log
 
 App.cable = ActionCable.createConsumer();
-App.channel = App.cable.subscriptions.create({channel: "MessagesChannel", room: "1"}, {
-    connected: function() { console.log('conn') },
-    disconnected: function() { console.log('disconn') },
+App.channel = App.cable.subscriptions.create({channel: "GameChannel"}, {
+    connected: function() { console.log('Connected. Waiting for opponent.') },
+    disconnected: function() { console.log('Disconnected.') },
     received: function(data) {
-      console.log('received', data)
+      switch(data.action) {
+        case 'game_starts':
+          console.log('Game starts.')
+        break;
+        case 'opponent_plays':
+          console.log('Opponent plays.' + data.msg)
+        break;
+        case 'opponent_forfeits':
+          console.log('Opponent forfiets.')
+        break;
+      }
     },
     speak: function(message, roomId) {
       console.log('speak', message)
     }
   });
 
-setTimeout(() => {
-  let maa = Math.random()
-  console.log('Sending bonjour de ' + maa)
-App.channel.send({ message: "Bonjour !", sent_by: Math.random() })
-},2000)
+function playWord(word)
+{
+  App.channel.perform("play_word", word)
+}
