@@ -19,12 +19,14 @@ button {
 	width: 220px;
 	height: 40px;
 	//style
-	background-color: #434E67; 
+	background-color: #77C280;; 
     border: none;
     color: white;
     text-align: center;
     text-decoration: none;
     font-size: 14px;
+    box-shadow: 0 2px 0 0 #53B060;
+    border-radius: 6px;
 }
 
 button:hover {
@@ -37,9 +39,10 @@ button:hover {
 	height: 40px;
 	//style
 	font-weight: 900;
-	background-color: #EEEEEE; 
-    border: 3px solid #434E67;
-    color: #434E67;
+	background-color: #FFFFFF; 
+    border: 2px solid #77C280;
+    box-shadow: 0 2px 0 0 #53B060;
+    color: #77C280;
     text-align: center;
     text-decoration: none;
     font-size: 14px;
