@@ -10,8 +10,6 @@ class ActionModels::Game
     REDIS.set("opponent_for:#{p1}", p0)
 
     game_id = SecureRandom.uuid
-    ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", game_id: game_id}
-    ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", game_id: game_id}
     REDIS.rpush("game_#{game_id}_pids",p0)
     REDIS.rpush("game_#{game_id}_pids",p1)
     REDIS.set("game_for:#{p0}", game_id)
@@ -26,7 +24,12 @@ class ActionModels::Game
     # REDIS.rpush("game_#{game_id}_words_p0", ..)
 
     update_last_move_timestamp(game_id)
-    REDIS.set("game_#{game_id}_last_letter",('a'..'z').to_a.sample)
+
+    first_letter = ('a'..'z').to_a.sample
+    REDIS.set("game_#{game_id}_last_letter",first_letter)
+
+    ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", opponent_name: Player.find_by(id: p1.to_i).username, first_letter: first_letter}
+    ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", opponent_name: Player.find_by(id: p0.to_i).username, first_letter: first_letter}
   end
 
 
@@ -42,11 +45,7 @@ class ActionModels::Game
     opponent = opponent_for(pid)
     pid = pid.to_s
 
-    puts "self.play_worxd"
-    puts "PID : #{pid}"
-    puts "Word : #{word}"
-    puts "Game_id : #{game_id}"
-
+    # Check if user is in the game
     pids = REDIS.lrange("game_#{game_id}_pids",0,-1) # Get all player ids
     puts "PIDS : #{pids.inspect}"
     if (pids[0] == pid)
@@ -54,35 +53,48 @@ class ActionModels::Game
     elsif (pids[1] == pid)
       px = "1"
     else
-      raise "Not in the game"
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not in the game"}
+      return
     end
 
-    # @TODO VERIFY IF WORD IS VALID
+    # @TODO Check if word is valid
 
+    # @TODO Check if word has already been played
+
+    # Check ob er dran ist
     if (REDIS.get("game_#{game_id}_next_px") != px)
-      raise "Not your turn"
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not your turn"}
+      return
     end
-    REDIS.set("game_#{game_id}_next_px", px == "0" ? "1" : "0")
 
+    # Check last letter
     if (REDIS.get("game_#{game_id}_last_letter") != word[0])
-      raise "Wrong first letter"
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Wrong first letter"}
+      return
     end
-    REDIS.set("game_#{game_id}_last_letter", word[-1])
 
+    # OK. Commit the move.
+    REDIS.set("game_#{game_id}_next_px", px == "0" ? "1" : "0")
+    REDIS.set("game_#{game_id}_last_letter", word[-1])
     REDIS.rpush("game_#{game_id}_p#{px}_words",word)
+    update_last_move_timestamp(game_id)
 
     old_score = REDIS.get("game_#{game_id}_p#{px}_score").to_i
     old_timestamp = REDIS.get("game_#{game_id}_last_move_timestamp").to_i
-    points = word.length*3 + (Time.now.to_i - old_timestamp)
-    REDIS.set("game_#{game_id}_p#{px}_score",old_score + points)
+    plus_points = word.length*3 + (Time.now.to_i - old_timestamp)
+    new_points = old_score + plus_points
+    REDIS.set("game_#{game_id}_p#{px}_score",new_points)
 
-    if (points > 120)
-      puts "The game is done"
+    if (new_points > 120)
+      ActionCable.server.broadcast "player_#{pid}", {action: "you_won"}
+      ActionCable.server.broadcast "player_#{opponent}", {action: "you_lost"}
+      puts "The music is over."
+      # @TODO kill game, erase from redis, commit to database analytics
+      return
     end
 
-    update_last_move_timestamp(game_id)
-
-    ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_plays", msg: word}
+    ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_played", msg: word, points: new_points}
+    ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points}
   end
 
   # UTL
