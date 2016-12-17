@@ -59,7 +59,20 @@ class ActionModels::Game
 
     # @TODO Check if word is valid
 
+    # if (!ShiritoriService.is_this_word_french? word)
+#      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word."}
+      #return
+    #end
+        #assignee: morgan
+
+
     # @TODO Check if word has already been played
+    p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
+    p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
+    if (p0_words.include?(word) || p1_words.include?(word))
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Word has already been played."}
+      return
+    end
 
     # Check ob er dran ist
     if (REDIS.get("game_#{game_id}_next_px") != px)
