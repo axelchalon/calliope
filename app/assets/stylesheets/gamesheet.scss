@@ -17,7 +17,7 @@
 	display: inline-block;
 	vertical-align: top;
 	margin: auto;
-	margin-top: 35px;
+	margin-top: 45px;
 	//size
 	height: 90px;
 	width: 90px;
@@ -109,37 +109,39 @@
 
 .game-board__previousWord__player{
 	//size
-	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	padding-left: 10px;
-	width: 140px;
+	width: 200px;
 	//style
 	background: #E8E8E8;
 	border: 1px solid #D8D8D8;
 	//position
-	margin-top: 20px;
-
+	margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
 	//content
 	font-size: 14px;
 	text-align: left;
 	font-weight: 600;
-	color: #969696;
+	color: #434E67;
 }
 
 .game-board__previousWord__adversary{
 	//size
-	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	padding-left: 10px;
-	width: 140px;
+	width: 200px;
 	//style
 	background: #E8E8E8;
 	border: 1px solid #D8D8D8;
 	//position
-	margin-top: 20px; 
-	display: block;
+	margin-top: 15px;
 	margin-left: auto;
-	margin-right: 0;
+	margin-right: auto; 
+	display: block;
+	
 	//content
 	font-size: 14px;
 	text-align: left;
@@ -149,7 +151,7 @@
 
 .game-board__abandon{
 	//position
-	margin-top: 30px;
+	margin-top: 20px;
 	//content
 	font-size: 12px;
 	color: #969696;

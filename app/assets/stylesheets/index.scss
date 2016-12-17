@@ -1,0 +1,127 @@
+// SUMMARY
+
+// lign 3   : GENERIC CLASSES
+// lign 58  : HOME BOX
+// lign 89  : RULES BOX
+
+// --------  GENERIC CLASSES -------- //
+
+.capeOfInvisibility{
+	display: none;
+}
+
+button {
+	//position
+	margin: auto;
+	display: block;
+	margin-top: 14px;
+	//size
+	width: 220px;
+	height: 40px;
+	//style
+	background-color: #434E67; 
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+button:hover {
+	//position
+	margin: auto;
+	display: block;
+	margin-top: 14px;
+	//size
+	width: 220px;
+	height: 40px;
+	//style
+	font-weight: 900;
+	background-color: #EEEEEE; 
+    border: 3px solid #434E67;
+    color: #434E67;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+
+}
+
+.h1__title{
+	//position
+	margin: auto;
+	padding-top: 40px;
+	//content
+	font-size: 20px;
+	font-weight: 900;
+	color: #434E67;
+}
+
+.h2__title{
+	//position
+	padding-bottom: 20px;
+	//content
+	font-size: 14px;
+	font-weight: 900;
+	color: #434E67;
+}
+
+// --------  HOME -------- //
+
+.home__container {
+	//position
+	margin: auto;
+	margin-top: 6%;
+	text-align: center;
+	//size
+	height: 420px;
+	width: 400px;
+	//style
+	background-color: #EEEEEE;
+	border-radius: 5px;
+	//content
+	font-family: 'Lato', sans-serif;
+}
+
+.home__textContent{
+	//position
+	margin: auto;
+	padding-top: 40px;
+	//size
+	width: 210px;
+	height: 110px;
+	//content
+	text-align: left;
+	font-size: 12px;
+	font-weight: 400;
+	color: #969696;
+}
+
+// --------  RULES BOX ----- //
+
+.rules__textContent{
+	
+	//position
+	margin: auto;
+	margin-top: 40px;
+	//size
+	width: 310px;
+	height: 200px;
+	//content
+	text-align: left;
+	font-size: 12px;
+	font-weight: 400;
+	color: #969696;
+	overflow: scroll;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,0);
+}
+::-webkit-scrollbar-corner { background: rgba(0,0,0,0); }
+
