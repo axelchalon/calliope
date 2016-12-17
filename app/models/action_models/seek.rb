@@ -1,7 +1,7 @@
 class ActionModels::Seek
   def self.create(uuid)
     if opponent = REDIS.spop("seeks")
-      Game.start(uuid, opponent)
+      ActionModels::Game.start(uuid, opponent)
     else
       REDIS.sadd("seeks", uuid)
     end

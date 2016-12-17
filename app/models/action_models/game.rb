@@ -12,8 +12,11 @@ class ActionModels::Game
     game_id = SecureRandom.uuid
     ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", game_id: game_id}
     ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", game_id: game_id}
-    REDIS.rpush("game_#{game_id}_pids",p0,p1)
-    puts "starting game with " + p0 + "and" + p1 + "(gid " + game_id + ")"
+    REDIS.rpush("game_#{game_id}_pids",p0)
+    REDIS.rpush("game_#{game_id}_pids",p1)
+    REDIS.set("game_for:#{p0}", game_id)
+    REDIS.set("game_for:#{p1}", game_id)
+    puts "starting game with " + p0.to_s + "and" + p1.to_s + "(gid " + game_id.to_s + ")"
 
     # stocker par uid?
     REDIS.set("game_#{game_id}_p0_score","0")
@@ -35,26 +38,33 @@ class ActionModels::Game
   end
 
   def self.play_word(pid, word)
+    game_id = game_for(pid)
     opponent = opponent_for(pid)
 
+    puts "self.play_worxd"
+    puts "PID : #{pid.inspect}"
+    puts "Word : #{word}"
+    puts "Game_id : #{game_id}"
+
     pids = REDIS.lrange("game_#{game_id}_pids",0,-1) # Get all player ids
-    if (pids[0] == pid)
+    puts "PIDS : #{pids.inspect}"
+    if (pids[0].to_s == pid)
       px = "0"
-    elsif (pids[1] == pid)
+    elsif (pids[1].to_s == pid)
       px = "1"
     else
-      raise new Error("Not in the game")
+      raise "Not in the game"
     end
 
     # @TODO VERIFY IF WORD IS VALID
 
     if (REDIS.get("game_#{game_id}_next_px") != px)
-      raise new Error("Not your turn")
+      raise "Not your turn"
     end
     REDIS.set("game_#{game_id}_next_px", px == "0" ? "1" : "0")
 
     if (REDIS.get("game_#{game_id}_last_letter") != word[0])
-      raise new Error("Not your turn")
+      raise "Wrong first letter"
     end
     REDIS.set("game_#{game_id}_last_letter", word[-1])
 
@@ -72,6 +82,12 @@ class ActionModels::Game
     update_last_move_timestamp(game_id)
 
     ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_plays", msg: word}
+  end
+
+  # UTL
+
+  def self.turboforfait()
+    REDIS.flushall();
   end
 
   def self.dumpx(game_id)
@@ -96,5 +112,9 @@ class ActionModels::Game
 
   def self.opponent_for(uuid)
     REDIS.get("opponent_for:#{uuid}")
+  end
+
+  def self.game_for(uuid)
+    REDIS.get("game_for:#{uuid}")
   end
 end
