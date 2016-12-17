@@ -3,55 +3,41 @@
 
 class ActionModels::Game
   def self.start(uuid1, uuid2)
-    white, black = [uuid1, uuid2].shuffle
+    p0, p1 = [uuid1, uuid2].shuffle
 
-    puts "starting game with " + uuid1 + "and" + uuid2
-
-    ActionCable.server.broadcast "player_#{white}", {action: "game_starts", msg: "white"}
-    ActionCable.server.broadcast "player_#{black}", {action: "game_starts", msg: "black"}
-
-    REDIS.set("opponent_for:#{white}", black)
-    REDIS.set("opponent_for:#{black}", white)
-
-
+    # legacy (for disconnect, etc)
+    REDIS.set("opponent_for:#{p0}", p1)
+    REDIS.set("opponent_for:#{p1}", p0)
 
     game_id = SecureRandom.uuid
-
-    REDIS.rpush("game_#{game_id}_pids",white,black)
+    ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", game_id: game_id}
+    ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", game_id: game_id}
+    REDIS.rpush("game_#{game_id}_pids",p0,p1)
+    puts "starting game with " + p0 + "and" + p1 + "(gid " + game_id + ")"
 
     # stocker par uid?
     REDIS.set("game_#{game_id}_p0_score","0")
     REDIS.set("game_#{game_id}_p1_score","0")
-
     REDIS.set("game_#{game_id}_next_px","0")
-    REDIS.set("game_#{game_id}_last_letter",('a'..'z').to_a.sample)
-    # REDIS.set("last_move_timestamp","0")
 
     # REDIS.rpush("game_#{game_id}_words_p0", ..)
 
+    update_last_move_timestamp(game_id)
+    REDIS.set("game_#{game_id}_last_letter",('a'..'z').to_a.sample)
   end
+
 
   def self.forfeit(uuid)
     if winner = opponent_for(uuid)
       ActionCable.server.broadcast "player_#{winner}", {action: "opponent_forfeits"}
+      # todo kill guest in table & libérer mémoire
     end
   end
-
-  def self.opponent_for(uuid)
-    REDIS.get("opponent_for:#{uuid}")
-  end
-
-  # def self.make_move(uuid, data)
-  #   opponent = opponent_for(uuid)
-  #   move_string = "#{data["from"]}-#{data["to"]}"
-  #
-  #   ActionCable.server.broadcast "player_#{opponent}", {action: "make_move", msg: move_string}
-  # end
 
   def self.play_word(pid, word)
     opponent = opponent_for(pid)
 
-    pids = REDIS.lrange("game_#{game_id}_pids",0,-1)
+    pids = REDIS.lrange("game_#{game_id}_pids",0,-1) # Get all player ids
     if (pids[0] == pid)
       px = "0"
     elsif (pids[1] == pid)
@@ -72,7 +58,6 @@ class ActionModels::Game
     end
     REDIS.set("game_#{game_id}_last_letter", word[-1])
 
-
     REDIS.rpush("game_#{game_id}_p#{px}_words",word)
 
     old_score = REDIS.get("game_#{game_id}_p#{px}_score").to_i
@@ -84,8 +69,32 @@ class ActionModels::Game
       puts "The game is done"
     end
 
-    REDIS.set("game_#{game_id}_last_move_timestamp", Time.now.to_i)
+    update_last_move_timestamp(game_id)
 
     ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_plays", msg: word}
+  end
+
+  def self.dumpx(game_id)
+    wamzou = {
+    pids: pids = REDIS.lrange("game_#{game_id}_pids",0,-1), # Get all player ids
+    p0_score: p0_score = REDIS.get("game_#{game_id}_p0_score"),
+    p1_score: p1_score = REDIS.get("game_#{game_id}_p1_score"),
+    next_px: next_px = REDIS.get("game_#{game_id}_next_px"),
+    last_letter:last_letter = REDIS.get("game_#{game_id}_last_letter"),
+    last_move_timestamp: last_move_timestamp = REDIS.get("game_#{game_id}_last_move_timestamp"),
+    p0_words: p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1),
+    p1_words: p1_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
+    }
+    puts wamzou.inspect
+  end
+
+  # UTH
+
+  def self.update_last_move_timestamp(game_id)
+    REDIS.set("game_#{game_id}_last_move_timestamp", Time.now.to_i)
+  end
+
+  def self.opponent_for(uuid)
+    REDIS.get("opponent_for:#{uuid}")
   end
 end
