@@ -21,8 +21,6 @@ class ActionModels::Game
     REDIS.set("game_#{game_id}_p1_score","0")
     REDIS.set("game_#{game_id}_next_px","0")
 
-    # REDIS.rpush("game_#{game_id}_words_p0", ..)
-
     update_last_move_timestamp(game_id)
 
     first_letter = ('a'..'z').to_a.sample
@@ -126,7 +124,11 @@ class ActionModels::Game
     puts "AI " + pid.to_s + " serching for word starting with " + last_letter
     ai_word = ShiritoriService.instance.random_word_starting_with(last_letter)
     puts "AI found " + ai_word
-    self.play_word(pid,ai_word)
+    Thread.new do
+      # WARNING: Errors inside this thread do not appear in the console
+      sleep rand(2..6)
+      self.play_word(pid,ai_word)
+    end
   end
 
   def self.notify_seek(pid)
