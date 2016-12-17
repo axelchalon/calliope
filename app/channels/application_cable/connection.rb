@@ -8,16 +8,16 @@ module ApplicationCable
       # service pour request en tant que guest login + hash?
       # self.uuid = SecureRandom.uuid
       # self.current_user = find_verified_user
-      self.uuid = find_verified_user.id
+      self.uuid = find_verified_player.id
     end
 
     protected
-      def find_verified_user
-        if current_user = User.find_by(id: cookies.signed[:user_id])
-          puts "Curent user OK"
-          current_user
+      def find_verified_player
+        if current_player = Player.find_by(id: cookies.signed['player.id'])
+          puts "Curent player OK"
+          current_player
         else
-          puts "Curent user REJECTED"
+          puts "Curent player REJECTED"
           reject_unauthorized_connection
         end
       end
