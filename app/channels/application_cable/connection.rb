@@ -14,11 +14,15 @@ module ApplicationCable
     protected
       def find_verified_player
         if current_player = Player.find_by(id: cookies.signed['player.id'])
-          puts "Curent player OK"
+          puts "Curent player REGISTERED"
           current_player
         else
-          puts "Curent player REJECTED"
-          reject_unauthorized_connection
+          puts "Curent player GUEST"
+          player = Player.create!(username: "Guest", password: rand(100000..999999))
+          player.username = "Guest #" + player.id.to_s
+          player.save!
+          player
+          # reject_unauthorized_connection
         end
       end
 

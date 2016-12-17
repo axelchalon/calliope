@@ -4,6 +4,7 @@ class ActionModels::Seek
       ActionModels::Game.start(uuid, opponent)
     else
       REDIS.sadd("seeks", uuid)
+      ActionModels::Game.notify_seek(uuid)
     end
   end
 

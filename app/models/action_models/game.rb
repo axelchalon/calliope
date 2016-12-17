@@ -57,15 +57,13 @@ class ActionModels::Game
       return
     end
 
-    # @TODO Check if word is valid
-
+    # Check if word is valid
     if (!ShiritoriService.instance.is_this_word_french?(word))
       ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word."}
       return
     end
 
-
-    # @TODO Check if word has already been played
+    # Check if word has already been played
     p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
     p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
     if (p0_words.include?(word) || p1_words.include?(word))
@@ -109,10 +107,14 @@ class ActionModels::Game
     ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points}
   end
 
+  def self.notify_seek(pid)
+    ActionCable.server.broadcast "player_#{pid}", {action: "seeking_opponent"}
+  end
+
   # UTL
 
   def self.turboforfait()
-    REDIS.flushall();
+    REDIS.flushall()
   end
 
   def self.dumpx(game_id)

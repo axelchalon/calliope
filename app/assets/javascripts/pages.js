@@ -17,6 +17,9 @@ function go() {
       disconnected: function() { console.log('Disconnected.') },
       received: function(data) {
         switch(data.action) {
+          case 'seeking_opponent':
+            console.log('Seeking an opponent...');
+          break;
           case 'game_starts':
             console.log('Game starts. You are ' + data.role + '. Opponent name: ' + data.opponent_name + ". First letter: " + data.first_letter)
           break;
