@@ -29,4 +29,8 @@ class ShiritoriService
     @dic.has_key? word
   end
 
+  def random_word_starting_with(last_letter)
+    @dic.children(last_letter).sample
+  end
+
 end

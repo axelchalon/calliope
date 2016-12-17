@@ -30,6 +30,11 @@ class ActionModels::Game
 
     ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", opponent_name: Player.find_by(id: p1.to_i).username, first_letter: first_letter}
     ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", opponent_name: Player.find_by(id: p0.to_i).username, first_letter: first_letter}
+
+    p0_is_ai = Player.find_by(id: p0).username.starts_with?("Computer") #TODO check if .ai
+    p1_is_ai = Player.find_by(id: p1).username.starts_with?("Computer") #TODO check if .ai
+    ai_play(p0, first_letter) if p0_is_ai
+    ai_play(p1, first_letter) if p1_is_ai
   end
 
 
@@ -43,6 +48,7 @@ class ActionModels::Game
   def self.play_word(pid, word)
     game_id = game_for(pid)
     opponent = opponent_for(pid)
+    opponent_is_ai = Player.find_by(id: opponent).username.starts_with?("Computer") #TODO check if .ai
     pid = pid.to_s
 
     # Check if user is in the game
@@ -68,6 +74,10 @@ class ActionModels::Game
     p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
     if (p0_words.include?(word) || p1_words.include?(word))
       ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Word has already been played."}
+      if opponent_is_ai
+        puts "Opponent who failed is AI; playing."
+        ai_play(opponent,REDIS.get("game_#{game_id}_last_letter"))
+      end
       return
     end
 
@@ -95,6 +105,9 @@ class ActionModels::Game
     new_points = old_score + plus_points
     REDIS.set("game_#{game_id}_p#{px}_score",new_points)
 
+    ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_played", msg: word, points: new_points}
+    ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points}
+
     if (new_points > 120)
       ActionCable.server.broadcast "player_#{pid}", {action: "you_won"}
       ActionCable.server.broadcast "player_#{opponent}", {action: "you_lost"}
@@ -103,8 +116,17 @@ class ActionModels::Game
       return
     end
 
-    ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_played", msg: word, points: new_points}
-    ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points}
+    if opponent_is_ai
+      puts "Opponent is AI; playing."
+      ai_play(opponent,word[-1])
+    end
+  end
+
+  def self.ai_play(pid,last_letter)
+    puts "AI " + pid.to_s + " serching for word starting with " + last_letter
+    ai_word = ShiritoriService.instance.random_word_starting_with(last_letter)
+    puts "AI found " + ai_word
+    self.play_word(pid,ai_word)
   end
 
   def self.notify_seek(pid)
