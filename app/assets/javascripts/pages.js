@@ -11,8 +11,8 @@ this.App = {};
 
 App.cable = ActionCable.createConsumer();
 
-function go() {
-  App.channel = App.cable.subscriptions.create({channel: "GameChannel"}, {
+function go(guest_name) {
+  App.channel = App.cable.subscriptions.create({channel: "GameChannel", guest_name: guest_name}, {
       connected: function() { console.log('Connected. Waiting for opponent.') },
       disconnected: function() { console.log('Disconnected.') },
       received: function(data) {
