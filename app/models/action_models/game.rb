@@ -59,11 +59,10 @@ class ActionModels::Game
 
     # @TODO Check if word is valid
 
-    # if (!ShiritoriService.is_this_word_french? word)
-#      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word."}
-      #return
-    #end
-        #assignee: morgan
+    if (!ShiritoriService.instance.is_this_word_french?(word))
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word."}
+      return
+    end
 
 
     # @TODO Check if word has already been played

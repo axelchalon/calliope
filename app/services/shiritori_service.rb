@@ -2,8 +2,15 @@ class ShiritoriService
   @dic = SHIRITORI_DIC
   @min_word_length = 4
 
-  def initialize(shiritori_dic=nil)
-    @dic = shiritori_dic if !shiritori_dic.nil?
+  include Singleton
+  #
+  # def initialize(shiritori_dic=nil)
+  #   @dic = shiritori_dic if !shiritori_dic.nil?
+  # end
+
+  def set_dic(shiritori_dic)
+    @dic = shiritori_dic
+    puts "DIC SET"
   end
 
   def compute_score(word, time_elapsed=0)

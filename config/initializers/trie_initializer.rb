@@ -3,6 +3,7 @@
 
 Rails.application.config.after_initialize do
   SHIRITORI_DIC = get_shiritori_dic()
+  ShiritoriService.instance.set_dic(SHIRITORI_DIC)
 end
 
 def get_shiritori_dic
