@@ -132,7 +132,7 @@ class ActionModels::Game
   end
 
   def self.notify_seek(pid)
-    ActionCable.server.broadcast "player_#{pid}", {action: "seeking_opponent"}
+    ActionCable.server.broadcast "player_#{pid}", {action: "seeking_opponent", pid: pid}
   end
 
   # UTL

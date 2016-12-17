@@ -11,14 +11,17 @@ this.App = {};
 
 App.cable = ActionCable.createConsumer();
 
-function go(guest_name, play_against_computer = false) {
-  App.channel = App.cable.subscriptions.create({channel: "GameChannel", guest_name: guest_name, play_against_computer: play_against_computer}, {
-      connected: function() { console.log('Connected. Waiting for opponent.') },
+function go(guest_name, play_against_computer = false, type = "public", opponent = false) {
+  App.channel = App.cable.subscriptions.create({channel: "GameChannel", guest_name: guest_name}, {
+      connected: function() {
+        console.log('Connected. Go!');
+        App.channel.perform("go", { play_against_computer: play_against_computer, type: type, opponent: opponent });
+      },
       disconnected: function() { console.log('Disconnected.') },
       received: function(data) {
         switch(data.action) {
           case 'seeking_opponent':
-            console.log('Seeking an opponent...');
+            console.log('Seeking an opponent. Your player ID is ' + data.pid);
           break;
           case 'game_starts':
             console.log('Game starts. You are ' + data.role + '. Opponent name: ' + data.opponent_name + ". First letter: " + data.first_letter)
