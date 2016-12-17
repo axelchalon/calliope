@@ -40,17 +40,18 @@ class ActionModels::Game
   def self.play_word(pid, word)
     game_id = game_for(pid)
     opponent = opponent_for(pid)
+    pid = pid.to_s
 
     puts "self.play_worxd"
-    puts "PID : #{pid.inspect}"
+    puts "PID : #{pid}"
     puts "Word : #{word}"
     puts "Game_id : #{game_id}"
 
     pids = REDIS.lrange("game_#{game_id}_pids",0,-1) # Get all player ids
     puts "PIDS : #{pids.inspect}"
-    if (pids[0].to_s == pid)
+    if (pids[0] == pid)
       px = "0"
-    elsif (pids[1].to_s == pid)
+    elsif (pids[1] == pid)
       px = "1"
     else
       raise "Not in the game"
@@ -99,7 +100,7 @@ class ActionModels::Game
     last_letter:last_letter = REDIS.get("game_#{game_id}_last_letter"),
     last_move_timestamp: last_move_timestamp = REDIS.get("game_#{game_id}_last_move_timestamp"),
     p0_words: p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1),
-    p1_words: p1_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
+    p1_words: p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
     }
     puts wamzou.inspect
   end
