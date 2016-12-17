@@ -1,5 +1,4 @@
 class ShiritoriService
-  @dic = SHIRITORI_DIC
   @min_word_length = 4
 
   include Singleton
