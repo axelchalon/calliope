@@ -39,22 +39,49 @@ class ActionModels::Game
   def self.forfeit(uuid)
     if winner = opponent_for(uuid)
       ActionCable.server.broadcast "player_#{winner}", {action: "opponent_forfeits"}
-      shootTheMessenger()
+      shootTheMessenger(uuid)
     end
   end
 
-  def self.shootTheMessenger()
-    # @TODO kill guest in table & libérer mémoire redis
+  def self.listenToHim()
+    # @TODO commit to database analytics
+    # @TODO préparer variables pour morgan via dumpx
+    # @TODO morgan
   end
 
-  def self.buryHisCorpse()
-    # @TODO commit to database analytics
+  def self.shootTheMessenger(uuid)
+    opponent = REDIS.get("opponent_for:#{uuid}")
+    game_id = REDIS.get("game_for:#{uuid}")
+
+    REDIS.del("game_#{game_id}_pids")
+    REDIS.del("game_#{game_id}_p0_score")
+    REDIS.del("game_#{game_id}_p1_score")
+    REDIS.del("game_#{game_id}_next_px")
+    REDIS.del("game_#{game_id}_last_letter")
+    REDIS.del("game_#{game_id}_last_move_timestamp")
+    REDIS.del("game_#{game_id}_p0_words")
+    REDIS.del("game_#{game_id}_p1_words")
+    REDIS.del("opponent_for:#{uuid}")
+    REDIS.del("opponent_for:#{opponent}")
+    REDIS.del("game_for:#{uuid}")
+    REDIS.del("game_for:#{opponent}")
+
+    player = Player.find_by(id: uuid)
+    opponent_player = Player.find_by(id: opponent)
+    if (player.guest)
+      player.destroy!
+    end
+
+    if (opponent_player.guest)
+      opponent_player.destroy!
+    end
+
   end
 
   def self.play_word(pid, word)
     game_id = game_for(pid)
     opponent = opponent_for(pid)
-    opponent_is_ai = Player.find_by(id: opponent).username.starts_with?("Computer") #TODO check if .ai
+    opponent_is_ai = Player.find_by(id: opponent).ai
     pid = pid.to_s
 
     # Check if user is in the game
@@ -118,8 +145,8 @@ class ActionModels::Game
       ActionCable.server.broadcast "player_#{pid}", {action: "you_won"}
       ActionCable.server.broadcast "player_#{opponent}", {action: "you_lost"}
       puts "The music is over."
-      shootTheMessenger()
-      buryHisCorpse()
+      listenToHim()
+      shootTheMessenger(pid)
       return
     end
 
