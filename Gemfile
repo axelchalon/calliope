@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-
+gem 'vuejs-rails'
 gem 'redis'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

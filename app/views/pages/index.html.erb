@@ -1,1 +1,23 @@
 <h1>Hellooola !</h1>
+
+<!-- app/views/employees/index.html -->
+<h1>Employees</h1>
+
+<div id="employees">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Manager</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="employee in employees">
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.manager }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
