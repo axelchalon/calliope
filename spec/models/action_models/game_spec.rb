@@ -47,4 +47,46 @@ RSpec.describe ActionModels::Game do
     expect(game.player2_score).to equal(0)
   end
 
+  it "stores words" do
+    player1 = Player.create!(username: "testUser1", password:"aaaaaa")
+    player2 = Player.create!(username: "testUser2", password:"aaaaaa")
+
+    ActionModels::Game.start(player1.id, player2.id)
+
+    game_id = REDIS.get("game_for:#{player1.id}")
+
+    pids = REDIS.lrange("game_#{game_id}_pids",0,-1) # Get all player ids
+    if (pids[0] == player1.id)
+      player1_px = "0"
+    elsif (pids[1] == player1.id)
+      player1_px = "1"
+    end
+
+    words = [
+      "yolo",
+      "orangoutan",
+      "niktamere",
+      "euhnonmerci",
+      "iranien",
+      "nounours",
+      "saperlipopette"
+    ]
+
+
+
+    REDIS.rpush("game_#{game_id}_p0_words",words[0])
+    REDIS.rpush("game_#{game_id}_p1_words",words[1])
+    REDIS.rpush("game_#{game_id}_p0_words",words[2])
+    REDIS.rpush("game_#{game_id}_p1_words",words[3])
+    REDIS.rpush("game_#{game_id}_p0_words",words[4])
+
+
+
+    ActionModels::Game.listenToHim(game_id, player1.id, player2.id, player1_px)
+
+    game = ::Game.last
+    expect(game).not_to be_nil
+
+  end
+
 end

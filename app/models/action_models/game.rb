@@ -29,7 +29,7 @@ class ActionModels::Game
     ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", opponent_name: Player.find_by(id: p1.to_i).username, first_letter: first_letter}
     ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", opponent_name: Player.find_by(id: p0.to_i).username, first_letter: first_letter}
 
-    p0_is_ai = Player.find_by(id: p0).username.starts_with?("Computer") #TODO check if .ai
+    p0_is_ai = Player.find_by(id: p0).ai
     ai_play(p0, first_letter) if p0_is_ai
   end
 
@@ -80,6 +80,27 @@ class ActionModels::Game
       )
 
     # Store words
+    player_1_words = REDIS.get("game_#{game_id}_p0_words")
+    player_2_words = REDIS.get("game_#{game_id}_p1_words")
+
+    return if player_1_words.nil? || player_2_words.nil?
+
+    if winner_px == "0"
+      player_1_pid, player_2_pid = winner_pid, loser_pid
+    else
+      player_2_pid, player_1_pid = winner_pid, loser_pid
+    end
+
+    player_1_gamewords = player_1_words.map do |w|
+      {player_id: player_1_pid, word: w, previous_letter: w[0]}
+    end
+    player_2_gamewords = player_2_words.map do |w|
+      {player_id: player_2_pid, word: w, previous_letter: w[0]}
+    end
+
+    gamewords = self.interleave(player_1_gamewords, player_2_gamewords)
+
+    GameWord.create!(gamewords)
   end
 
   def self.shootTheMessenger(uuid)
@@ -246,4 +267,14 @@ class ActionModels::Game
   def self.game_for(uuid)
     REDIS.get("game_for:#{uuid}")
   end
+
+  def self.interleave(*args)
+    # coucou stack overflow
+    max_length = args.map(&:size).max
+    pad = Object.new()
+    args = args.map{|a| a.dup.fill(pad,(a.size...max_length))}
+    ([pad]*max_length).zip(*args).flatten-[pad]
+    # /coucou
+  end
+
 end
