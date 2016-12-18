@@ -1,8 +1,8 @@
 window.onload = () => {
-  var employees = new Vue({
-    el: '#employees',
+  var mavue = new Vue({
+    el: '#vue-index',
     data: {
-      employees: [{name: "hello", email: "meal", manager:"jccc+"}]
+      screen: 'home'
     },
     ready: function() {
     console.log('ready freddy')

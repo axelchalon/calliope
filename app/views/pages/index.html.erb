@@ -1,30 +1,9 @@
 <h1>Hellooola !</h1>
 
-<!-- app/views/employees/index.html -->
-<h1>Employees</h1>
-
-<div id="employees">
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Manager</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="employee in employees">
-        <td>{{ employee.name }}</td>
-        <td>{{ employee.email }}</td>
-        <td>{{ employee.manager }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div id="vue-index">
 
 <!-- ////// HOME ////// -->
-<div class="home__container capeOfInvisibility ">
+<div class="home__container" v-show="screen == 'home'">
 	<h1 class="h1__title"> Bienvenue sur Shiritori</h1>
 
 	<div class="home__textContent">
@@ -33,20 +12,20 @@
 
 	<form class="form"> Pseudonyme </form>
 
-	<button class="button:hover">
+	<button @click="screen = 'rules'">
 		Règles du jeu
 	</button>
 
-	<button class="button:hover">
+	<button>
 		Jouer en mode multi-joueur
 	</button>
 
-	<button class="button:hover">
+	<button>
 		Jouer en mode solo
 	</button>
 </div>
 
-<div class="home__container ">
+<div class="home__container" v-show="screen == 'login'">
 	<h1 class="h1__title"> Connectez vous</h1>
 
 
@@ -58,7 +37,7 @@
 
 	<br><br><br>
 
-	<button class="button:hover">
+	<button>
 		Terminé
 	</button>
 
@@ -67,7 +46,7 @@
 
 <!-- ////// RULES BOX ////// -->
 
-<div class="home__container capeOfInvisibility">
+<div class="home__container" v-show="screen == 'rules'">
 	<h1 class="h1__title"> Les règles du Shiritori</h1>
 
 	<div class="rules__textContent">
@@ -106,10 +85,12 @@
 
 	</div>
 
-		<button class="button:hover">
-		Retour à l'acceuil
+		<button @click="screen = 'home'">
+		Retour à l'accueil
 	</button>
 
 </div>
 
 <!-- ////// Mode Solo ////// -->
+
+</div>
