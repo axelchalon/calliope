@@ -22,6 +22,7 @@ window.onload = () => {
             words: [],
             timer: 15,
             type: '',
+            status: 'playing',
             yourTurn: false,
             currentWord: '',
             skipTimeout: -1
@@ -108,22 +109,23 @@ window.onload = () => {
                                     thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
                                 thisVue.yourTurn = true
                                 thisVue.timer = 15;
+                                thisVue.gameError = '';
                                 console.log('Opponent plays: ' + data.msg + ' ; now has ' + data.points + ' points');
 
                                 clearTimeout(thisVue.skipTimeout)
                                 thisVue.skipTimeout = setTimeout(() => thisVue.playWord(false), 15000)
                                 break;
                             case 'opponent_forfeits':
-                                thisVue.screen = 'game-won'
+                                thisVue.status = 'forfeits'
                                 console.log('You won.')
                                 console.log('Opponent forfeits.')
                                 break;
                             case 'you_won':
-                                thisVue.screen = 'game-won'
+                                thisVue.status = 'won'
                                 console.log('You won.')
                                 break;
                             case 'you_lost':
-                                thisVue.screen = 'game-lost'
+                                thisVue.status = 'lost'
                                 console.log('You lost.')
                                 break;
                             case 'error':

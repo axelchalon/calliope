@@ -29,7 +29,7 @@
 		</div>
 
 		<div class="game-board">
-			<div class="game-board__error">
+			<div class="game-board__error" v-show="status == 'playing'">
 				<p v-if="yourTurn">
 				À votre tour ! &Eacute;crivez un mot commençant par la lettre
 				</p>
@@ -47,10 +47,24 @@
 				 	Attention ! Votre mot doit commencer par la lettre {{ firstLetter }}
 				 </p>
 			 </div>
-			 <div class="game-board__playBox">
+
+			 	<div class="game-board__error" v-show="status == 'forfeits'">
+				 Votre adversaire a quitté la partie.
+				</div>
+
+			 	<div class="game-board__error"  v-show="status == 'won'">
+				 Vous avez gagné !
+				</div>
+
+			 	<div class="game-board__error"  v-show="status == 'lost'">
+				 Vous avez perdu !
+				</div>
+
+			 <div class="game-board__playBox" v-show="status == 'playing'">
 				<div class="game-board__writtingBox"><input type="text" v-model="currentWord" @keyup.enter="playWord(currentWord)" v-bind:disabled="!yourTurn"></div>
 				<div class="game-board__timer"><span v-if="yourTurn">{{ timer }}</span></div>
 			</div>
+
 			<div class="game-board__archive">
 				<div :class="{'game-board__previousWord__adversary': word.by == 'opponent', 'game-board__previousWord__player': word.by == 'me'}" v-for="word in wordsReversed">
 					{{ word.word }}

@@ -1,0 +1,24 @@
+od
+- sign in: super et check si username masterguest / masterpassword
+
+MO:
+- problème de connexion
+- devise en fr
+- empêcher les espaces dans le nom d'utilisateur à l'inscription
+- dico
+
+ed:
+- 15 secondes sans donner de mot OK
+- décompte / timer OK
+- animations chiffres : boucle for
+- à la fin de la partie, regarder profil de l'autre personne
+- empêcher log sr master
+- UX interface de jeu : un mot qui commence
+- commencer à 120
+- itf victoire/défaite
+- point winning, point losing
+- limite username
+- couleur hit si mauvais mot
+- écran fin de partie rejouer. rejouer contre un autre joueur / contre le même ?
+- points à côté des mots
+- animations sur les mots
