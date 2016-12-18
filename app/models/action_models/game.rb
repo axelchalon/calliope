@@ -61,6 +61,12 @@ class ActionModels::Game
       return
     end
 
+    # Check ob er dran ist
+    if (REDIS.get("game_#{game_id}_next_px") != px)
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not your turn"}
+      return
+    end
+
     # Check if word is valid
     if (!ShiritoriService.instance.is_this_word_french?(word))
       ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word."}
@@ -76,12 +82,6 @@ class ActionModels::Game
         puts "Opponent who failed is AI; playing."
         ai_play(opponent,REDIS.get("game_#{game_id}_last_letter"))
       end
-      return
-    end
-
-    # Check ob er dran ist
-    if (REDIS.get("game_#{game_id}_next_px") != px)
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not your turn"}
       return
     end
 
