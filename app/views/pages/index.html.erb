@@ -33,7 +33,7 @@
 				 </p>
 			 </div>
 			 <div class="game-board__playBox">
-				<div class="game-board__writtingBox"><input type="text" v-model="currentWord" @keyup.enter="playWord(currentWord)"></div>
+				<div class="game-board__writtingBox"><input type="text" v-model="currentWord" @keyup.enter="playWord(currentWord)" v-bind:disabled="!yourTurn"></div>
 				<div class="game-board__timer">5</div>
 			</div>
 			<div class="game-board__archive">

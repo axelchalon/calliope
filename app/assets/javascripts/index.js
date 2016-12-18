@@ -22,6 +22,7 @@ window.onload = () => {
       firstLetter: '',
       gameError: '',
       words: [],
+      yourTurn: false,
       currentWord: ''
     },
     ready: function() {
@@ -53,19 +54,22 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
           case 'game_starts':
             thisVue.screen = 'game-game'
             thisVue.opponentName = data.opponent_name
-            thisVue.firstLetter = data.first_letter
+            thisVue.firstLetter = data.first_letter.toUpperCase()
             console.log('Game starts. You are ' + data.role + '. Opponent name: ' + data.opponent_name + ". First letter: " + data.first_letter)
+            thisVue.yourTurn = data.role == 'p0'
           break;
           case 'word_accepted':
             thisVue.myPoints = data.points;
             thisVue.gameError = ''
             thisVue.words.push({word: data.msg, by: "me"})
-            thisVue.firstLetter = data.msg.slice(-1)
+            thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
             console.log('OK. You now have ' + data.points + ' points');
           break;
           case 'opponent_played':
             thisVue.opponentPoints = data.points;
             thisVue.words.push({word: data.msg, by: "opponent"})
+            thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
+            thisVue.yourTurn = true
             console.log('Opponent plays: ' + data.msg + ' ; now has ' + data.points + ' points');
           break;
           case 'opponent_forfeits':
@@ -79,6 +83,7 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
           break;
           case 'error':
             thisVue.gameError = data.short
+            thisVue.yourTurn = true
             console.log('Error:' + data.msg)
           break;
           default:
@@ -93,6 +98,7 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
 },
 playWord: function(word) {
   this.currentWord = '';
+  this.yourTurn = false
   App.channel.perform("play_word", {word: word})
 }
 }

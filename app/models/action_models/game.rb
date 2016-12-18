@@ -124,11 +124,11 @@ class ActionModels::Game
     puts "AI " + pid.to_s + " serching for word starting with " + last_letter
     ai_word = ShiritoriService.instance.random_word_starting_with(last_letter)
     puts "AI found " + ai_word
-    # Thread.new do
+    Thread.new do
       # WARNING: Errors inside this thread do not appear in the console
-      # sleep rand(2..6)
+      sleep rand(2..6)
       self.play_word(pid,ai_word)
-    # end
+    end
   end
 
   def self.notify_seek(pid)

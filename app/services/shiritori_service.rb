@@ -29,7 +29,7 @@ class ShiritoriService
   end
 
   def random_word_starting_with(last_letter)
-    @dic.children(last_letter).sample
+    @dic.children(last_letter).sample.force_encoding(Encoding::UTF_8)
   end
 
 end
