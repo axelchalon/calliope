@@ -92,12 +92,16 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
             console.log('Opponent plays: ' + data.msg + ' ; now has ' + data.points + ' points');
           break;
           case 'opponent_forfeits':
+            thisVue.screen = 'game-won'
+            console.log('You won.')
             console.log('Opponent forfeits.')
           break;
           case 'you_won':
+            thisVue.screen = 'game-won'
             console.log('You won.')
           break;
           case 'you_lost':
+            thisVue.screen = 'game-lost'
             console.log('You lost.')
           break;
           case 'error':

@@ -39,8 +39,16 @@ class ActionModels::Game
   def self.forfeit(uuid)
     if winner = opponent_for(uuid)
       ActionCable.server.broadcast "player_#{winner}", {action: "opponent_forfeits"}
-      # todo kill guest in table & libérer mémoire
+      shootTheMessenger()
     end
+  end
+
+  def self.shootTheMessenger()
+    # @TODO kill guest in table & libérer mémoire redis
+  end
+
+  def self.buryHisCorpse()
+    # @TODO commit to database analytics
   end
 
   def self.play_word(pid, word)
@@ -110,7 +118,8 @@ class ActionModels::Game
       ActionCable.server.broadcast "player_#{pid}", {action: "you_won"}
       ActionCable.server.broadcast "player_#{opponent}", {action: "you_lost"}
       puts "The music is over."
-      # @TODO kill game, erase from redis, commit to database analytics
+      shootTheMessenger()
+      buryHisCorpse()
       return
     end
 
