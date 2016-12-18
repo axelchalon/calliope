@@ -66,8 +66,12 @@
 		Règles du jeu
 	</button>
 
-	<button>
-		Jouer en mode multi-joueur
+	<button @click="goPublic()">
+		Jouer en ligne
+	</button>
+
+	<button @click="goPrivate()">
+		Jouer en ligne avec un ami
 	</button>
 
 	<button @click="goSolo()">

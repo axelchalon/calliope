@@ -10,7 +10,7 @@ App.cable = ActionCable.createConsumer();
 
 
 window.onload = () => {
-  var mavue = new Vue({
+  var MESYEUX = new Vue({
     el: '#vue-index',
     data: {
       screen: 'home',
@@ -22,6 +22,7 @@ window.onload = () => {
       firstLetter: '',
       gameError: '',
       words: [],
+      type: '',
       yourTurn: false,
       currentWord: ''
     },
@@ -36,7 +37,18 @@ window.onload = () => {
   methods: {
 goSolo: function() {
   this.screen = 'game-seeking'
+  this.type = 'ai'
   this.go(this.guestName, true)
+},
+goPublic: function() {
+  this.screen = 'game-seeking'
+  this.type = 'public'
+  this.go(this.guestName, false, "public")
+},
+goPrivate: function(watchword) {
+  this.screen = 'game-seeking'
+  this.type = 'private'
+  this.go(this.guestName, false, "private", watchword)
 },
 go: function(guest_name, play_against_computer = false, type = "public", opponent = false) {
   var thisVue = this;
@@ -49,6 +61,9 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
       received: function(data) {
         switch(data.action) {
           case 'seeking_opponent':
+            if (this.type == 'private')
+              this.gameLink = location.protocol+'//'+location.host+location.pathname+"#game"+data.
+
             console.log('Seeking an opponent. Your player ID is ' + data.pid);
           break;
           case 'game_starts':
@@ -103,4 +118,10 @@ playWord: function(word) {
 }
 }
   });
+
+if ((splits = window.location.href.split("#")) && splits.length > 1)
+{
+  MESYEUX.goPrivate(splits[1].substr(4));
+}
+
 }
