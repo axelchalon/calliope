@@ -3,9 +3,7 @@ require 'redis_spec_helper'
 
 RSpec.describe ActionModels::Game do
 
-  pending "test ai and guest cases"
-
-  it "creates a game without fuss" do
+  it "creates a game without a fuss" do
     player1 = Player.create!(username: "testUser1", password:"aaaaaa")
     player2 = Player.create!(username: "testUser2", password:"aaaaaa")
 
@@ -25,10 +23,9 @@ RSpec.describe ActionModels::Game do
 
     ActionModels::Game.start(player1.id, player2.id)
 
-    game_for_player1 = REDIS.get("game_for:#{player1.id}")
-    game_for_player2 = REDIS.get("game_for:#{player2.id}")
+    game_id = REDIS.get("game_for:#{player1.id}")
 
-    pids = REDIS.lrange("game_#{game_for_player1}_pids",0,-1) # Get all player ids
+    pids = REDIS.lrange("game_#{game_id}_pids",0,-1) # Get all player ids
     puts "PIDS : #{pids.inspect}"
     if (pids[0] == player1.id)
       player1_px = "0"
@@ -36,7 +33,7 @@ RSpec.describe ActionModels::Game do
       player1_px = "1"
     end
 
-    ActionModels::Game.listenToHim(game_for_player1, player1.id, player2.id, player1_px)
+    ActionModels::Game.listenToHim(game_id, player1.id, player2.id, player1_px)
 
     game = ::Game.last
 
@@ -47,8 +44,8 @@ RSpec.describe ActionModels::Game do
     expect(game.player2_score).to equal(0)
   end
 
-  it "stores words" do
-    player1 = Player.create!(username: "testUser1", password:"aaaaaa")
+  it "stores words and nils" do
+    player1 = Player.create!(username: "testUser1", password:"aaaaaa", guest: true)
     player2 = Player.create!(username: "testUser2", password:"aaaaaa")
 
     ActionModels::Game.start(player1.id, player2.id)
@@ -63,29 +60,30 @@ RSpec.describe ActionModels::Game do
     end
 
     words = [
-      "yolo",
+      nil,
       "orangoutan",
-      "niktamere",
-      "euhnonmerci",
+      "naturaliste",
+      nil,
       "iranien",
       "nounours",
       "saperlipopette"
     ]
-
-
 
     REDIS.rpush("game_#{game_id}_p0_words",words[0])
     REDIS.rpush("game_#{game_id}_p1_words",words[1])
     REDIS.rpush("game_#{game_id}_p0_words",words[2])
     REDIS.rpush("game_#{game_id}_p1_words",words[3])
     REDIS.rpush("game_#{game_id}_p0_words",words[4])
-
-
+    REDIS.rpush("game_#{game_id}_p0_words",words[5])
+    REDIS.rpush("game_#{game_id}_p0_words",words[6])
 
     ActionModels::Game.listenToHim(game_id, player1.id, player2.id, player1_px)
 
     game = ::Game.last
     expect(game).not_to be_nil
+
+    gameWords = ::GameWord.where({game: game})
+    expect(gameWords.pluck(:word)).to eq(words)
 
   end
 

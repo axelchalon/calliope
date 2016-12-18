@@ -80,8 +80,8 @@ class ActionModels::Game
       )
 
     # Store words
-    player_1_words = REDIS.get("game_#{game_id}_p0_words")
-    player_2_words = REDIS.get("game_#{game_id}_p1_words")
+    player_1_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
+    player_2_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
 
     return if player_1_words.nil? || player_2_words.nil?
 
@@ -92,10 +92,10 @@ class ActionModels::Game
     end
 
     player_1_gamewords = player_1_words.map do |w|
-      {player_id: player_1_pid, word: w, previous_letter: w[0]}
+      {player_id: player_1_pid, game_id: game.id, word: w, previous_letter: w[0]}
     end
     player_2_gamewords = player_2_words.map do |w|
-      {player_id: player_2_pid, word: w, previous_letter: w[0]}
+      {player_id: player_2_pid, game_id: game.id, word: w, previous_letter: w[0]}
     end
 
     gamewords = self.interleave(player_1_gamewords, player_2_gamewords)

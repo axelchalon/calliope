@@ -7,11 +7,11 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Guest players for AI and Guest games storage
-masterGuest = Player.create!(
-  username: "MasterGuest",
-  password: "NUvpàçHvpç!",
-  guest: true)
-masterAi = Player.create!(
-  username: "MasterAi",
-  password: "NUvpàçHvpç!",
-  ai: true)
+masterGuest = Player.where(username: "MasterGuest").first_or_create do |player|
+  player.password = "NUvpàçHvpç!"
+  player.guest = true
+end
+masterAi = Player.where(username: "MasterAi").first_or_create do |player|
+  player.password = "NUvpàçHvpç!"
+  player.ai = true
+end
