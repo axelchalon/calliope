@@ -1,9 +1,10 @@
-
 //= require vue
 //= require cable
 //= require_self
 //= require_tree .
 
+
+'use strict';
 this.App = {};
 
 App.cable = ActionCable.createConsumer();
@@ -38,17 +39,20 @@ window.onload = () => {
 goSolo: function() {
   this.screen = 'game-seeking'
   this.type = 'ai'
-  this.go(this.guestName, true)
+  this.myName = this.myName || "Inconnu"
+  this.go(this.myName, true)
 },
 goPublic: function() {
   this.screen = 'game-seeking'
   this.type = 'public'
-  this.go(this.guestName, false, "public")
+  this.myName = this.myName || "Inconnu"
+  this.go(this.myName, false, "public")
 },
 goPrivate: function(watchword) {
   this.screen = 'game-seeking'
   this.type = 'private'
-  this.go(this.guestName, false, "private", watchword)
+  this.myName = this.myName || (watchword && "Invité") || "Inconnu"
+  this.go(this.myName, false, "private", watchword)
 },
 go: function(guest_name, play_against_computer = false, type = "public", opponent = false) {
   var thisVue = this;
@@ -61,8 +65,8 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
       received: function(data) {
         switch(data.action) {
           case 'seeking_opponent':
-            if (this.type == 'private')
-              this.gameLink = location.protocol+'//'+location.host+location.pathname+"#game"+data.
+            if (thisVue.type == 'private')
+              thisVue.gameLink = location.protocol+'//'+location.host+location.pathname+"#game"+data.pid
 
             console.log('Seeking an opponent. Your player ID is ' + data.pid);
           break;
@@ -119,6 +123,7 @@ playWord: function(word) {
 }
   });
 
+var splits;
 if ((splits = window.location.href.split("#")) && splits.length > 1)
 {
   MESYEUX.goPrivate(splits[1].substr(4));
