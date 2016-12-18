@@ -12,6 +12,10 @@ class ShiritoriService
     puts "DIC SET"
   end
 
+  def set_dic_if_reference_was_lost
+    @dic = get_shiritori_dic if @dic.nil?
+  end
+
   def compute_score(word, time_elapsed=0)
     return 0 unless is_this_word_french? word
     return 0 if word.length < 4
@@ -25,10 +29,12 @@ class ShiritoriService
   end
 
   def is_this_word_french? word
+    set_dic_if_reference_was_lost
     @dic.has_key? word.downcase
   end
 
   def random_word_starting_with(last_letter)
+    set_dic_if_reference_was_lost
     @dic.children(last_letter).sample.force_encoding(Encoding::UTF_8)
   end
 
