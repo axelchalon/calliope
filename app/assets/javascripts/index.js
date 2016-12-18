@@ -29,7 +29,7 @@ window.onload = () => {
   },
   computed: {
     wordsReversed: function() {
-        return this.words.reverse();
+        return this.words.reduceRight((acc, e) => (acc.push(e), acc), []);
     }
 },
   methods: {
