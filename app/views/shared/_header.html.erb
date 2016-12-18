@@ -1,9 +1,13 @@
 <header class="header">
-    
+
     <div class="logo">Shiritori</div>
-    <div class="profile-access"> 
-		
-		<p class="profile-access__name">Joueur 1</p>
+    <div class="profile-access">
+
+		<p class="profile-access__name">
+      <% if current_player %>
+        <%= link_to(current_player.username, player_path(current_player.id), class: 'uniforme') %>
+      <% end %>
+    </p>
     </div>
 
 </header>

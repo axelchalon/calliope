@@ -1,26 +1,20 @@
-<h2>Log in</h2>
+<div class="home__container">
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :username %><br />
-    <%= f.text_field :username, autofocus: true %>
-  </div>
+	<h1 class="h1__title"> Connectez-vous</h1>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
 
-  <% if devise_mapping.rememberable? -%>
     <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+      <%= f.text_field :username, autofocus: true, placeholder: 'Pseudonyme', class: 'form spacing' %>
     </div>
-  <% end -%>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
+    <div class="field">
+      <%= f.password_field :password, autocomplete: "off", placeholder: 'Mot de passe', class: 'form spacing' %>
+    </div>
 
-<%= render "devise/shared/links" %>
+    <%= f.submit "Se connecter", class: 'benjamin' %>
+  <% end %>
+
+  <p class="subrepticement">Pas encore de compte ?  <%= link_to('S\'inscrire', new_player_registration_path)  %></p>
+</div>

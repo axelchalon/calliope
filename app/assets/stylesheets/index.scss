@@ -10,7 +10,7 @@
 	display: none;
 }
 
-button {
+button, .benjamin {
 	//position
 	margin: auto;
 	display: block;
@@ -19,7 +19,7 @@ button {
 	width: 220px;
 	height: 40px;
 	//style
-	background-color: #77C280;; 
+	background-color: #77C280;;
     border: none;
     color: white;
     text-align: center;
@@ -29,7 +29,7 @@ button {
     border-radius: 6px;
 }
 
-button:hover {
+button:hover, .benjamin:hover, .ohdesespoir {
 	//position
 	margin: auto;
 	display: block;
@@ -39,7 +39,7 @@ button:hover {
 	height: 40px;
 	//style
 	font-weight: 900;
-	background-color: #FFFFFF; 
+	background-color: #FFFFFF;
     border: 2px solid #77C280;
     box-shadow: 0 2px 0 0 #53B060;
     color: #77C280;
@@ -68,7 +68,7 @@ button:hover {
 	color: #434E67;
 }
 
-.form{ 
+.form{
 	//position
 	margin: auto;
 	display: block;
@@ -82,6 +82,7 @@ button:hover {
 	padding-bottom: 5px;
     border-bottom: 1px solid;
     color: #969696;
+		outline: none;
 }
 
 // --------  HOME -------- //
@@ -92,7 +93,9 @@ button:hover {
 	margin-top: 6%;
 	text-align: center;
 	//size
-	height: 420px;
+	// height: 420px;
+	margin-bottom: 6%;
+	padding-bottom: 6%;
 	width: 400px;
 	//style
 	background-color: #FFFFFF;
@@ -123,7 +126,7 @@ button:hover {
 // --------  RULES BOX ----- //
 
 .rules__textContent{
-	
+
 	//position
 	margin: auto;
 	margin-top: 40px;
@@ -149,3 +152,6 @@ button:hover {
 }
 ::-webkit-scrollbar-corner { background: rgba(0,0,0,0); }
 
+.subrepticement { margin-top: 20px; }
+.bloc { display: block; }
+.uniforme { color: inherit; text-decoration: none; }

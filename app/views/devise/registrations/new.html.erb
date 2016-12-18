@@ -1,29 +1,27 @@
-<h2>Sign up</h2>
+<div class="home__container">
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+	<h1 class="h1__title">S'inscrire</h1>
 
-  <div class="field">
-    <%= f.label :username %><br />
-    <%= f.text_field :username, autofocus: true %>
-  </div>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
+    <div class="field">
+      <%= f.text_field :username, autofocus: true, placeholder: 'Pseudonyme', class: 'form spacing' %>
+    </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
-  </div>
+    <div class="field">
+      <%= f.password_field :password, autocomplete: "off", placeholder: 'Mot de passe', class: 'form spacing' %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+    <div class="field">
+      <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Répéter mot de passe', class: 'form spacing' %>
+    </div>
 
-<%= render "devise/shared/links" %>
+    <br>
+
+    <%= f.submit "Faire partie de l'aventure", class: 'benjamin' %>
+  <% end %>
+
+  <br><br>
+  <p class="subrepticement">Déjà détenteur d'un compte ?  <%= link_to('Devenez connecté', new_player_session_path)  %></p>
+</div>
