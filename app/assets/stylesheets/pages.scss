@@ -1,3 +1,58 @@
 // Place all the styles related to the pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// GENERIC CLASSES
+
+body {
+	background-color:#E5E6EA;
+	width: 100%;
+	font-family: 'Lato', sans-serif;
+	font-size: 16px;
+}
+
+
+
+// HEADER
+.logo{
+	//position
+	display: inline-block;
+	margin-left: 100px;
+	margin-top: 24px;
+	//style
+	font-family: 'Lato', sans-serif;
+	font-size: 30px;
+	font-weight: 900;
+	color: #F6F6F6;
+}
+
+header{
+	background-color: #3E475C;
+	width: 100%;
+	height: 80px; 
+}
+
+.profile-access {
+	width: 240px;
+	height: 100%;
+	float: right;
+}
+
+.profile-access__image {
+	display: inline-block;
+	background-color: #F6F6F6;
+	width: 50px;
+	height: 50px; 
+	margin-top: 15px;
+	border-radius: 50%;
+}
+
+.profile-access__name {
+	display: inline-block;
+	color: #F6F6F6;
+	font-family: 'Lato', sans-serif;
+	letter-spacing: 0;
+	float: right;
+	margin-right: 100px;
+	margin-top: 30px;
+}
