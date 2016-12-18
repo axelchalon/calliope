@@ -30,6 +30,7 @@ class GameChannel < ApplicationCable::Channel
 
   def unsubscribed
     ActionModels::Seek.remove(uuid)
+    ActionModels::ArrangedSeek.remove(uuid)
     ActionModels::Game.forfeit(uuid)
   end
 

@@ -1,5 +1,17 @@
 <div id="vue-index">
 
+	<div class="game__container" v-show="screen == 'game-lost'">
+		<p class="xcenter">
+			Vous avez perdu !
+		</p>
+	</div>
+
+	<div class="game__container" v-show="screen == 'game-won'">
+		<p class="xcenter">
+			Vous avez gagné !
+		</p>
+	</div>
+
 	<div class="game__container" v-show="screen == 'game-seeking'">
 		<p class="xcenter">
 			En attente de joueur...
@@ -42,7 +54,7 @@
 				</div>
 
 			</div>
-			<div class="game-board__abandon hvr-grow">Abandonner ?</div>
+			<div class="game-board__abandon hvr-grow" href="/">Abandonner ?</div>
 
 		</div>
 
@@ -66,12 +78,16 @@
 		Règles du jeu
 	</button>
 
-	<button>
-		Jouer en mode multi-joueur
+	<button @click="goPublic()">
+		Jouer en ligne
+	</button>
+
+	<button @click="goPrivate()">
+		Jouer en ligne avec un ami
 	</button>
 
 	<button @click="goSolo()">
-		Jouer en mode solo
+		Jouer contre l'ordinateur
 	</button>
 </div>
 

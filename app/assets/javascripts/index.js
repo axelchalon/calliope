@@ -1,16 +1,17 @@
-
 //= require vue
 //= require cable
 //= require_self
 //= require_tree .
 
+
+'use strict';
 this.App = {};
 
 App.cable = ActionCable.createConsumer();
 
 
 window.onload = () => {
-  var mavue = new Vue({
+  var MESYEUX = new Vue({
     el: '#vue-index',
     data: {
       screen: 'home',
@@ -22,6 +23,7 @@ window.onload = () => {
       firstLetter: '',
       gameError: '',
       words: [],
+      type: '',
       yourTurn: false,
       currentWord: ''
     },
@@ -36,7 +38,21 @@ window.onload = () => {
   methods: {
 goSolo: function() {
   this.screen = 'game-seeking'
-  this.go(this.guestName, true)
+  this.type = 'ai'
+  this.myName = this.myName || "Inconnu"
+  this.go(this.myName, true)
+},
+goPublic: function() {
+  this.screen = 'game-seeking'
+  this.type = 'public'
+  this.myName = this.myName || "Inconnu"
+  this.go(this.myName, false, "public")
+},
+goPrivate: function(watchword) {
+  this.screen = 'game-seeking'
+  this.type = 'private'
+  this.myName = this.myName || (watchword && "Invité") || "Inconnu"
+  this.go(this.myName, false, "private", watchword)
 },
 go: function(guest_name, play_against_computer = false, type = "public", opponent = false) {
   var thisVue = this;
@@ -49,6 +65,9 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
       received: function(data) {
         switch(data.action) {
           case 'seeking_opponent':
+            if (thisVue.type == 'private')
+              thisVue.gameLink = location.protocol+'//'+location.host+location.pathname+"#game"+data.pid
+
             console.log('Seeking an opponent. Your player ID is ' + data.pid);
           break;
           case 'game_starts':
@@ -73,12 +92,16 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
             console.log('Opponent plays: ' + data.msg + ' ; now has ' + data.points + ' points');
           break;
           case 'opponent_forfeits':
+            thisVue.screen = 'game-won'
+            console.log('You won.')
             console.log('Opponent forfeits.')
           break;
           case 'you_won':
+            thisVue.screen = 'game-won'
             console.log('You won.')
           break;
           case 'you_lost':
+            thisVue.screen = 'game-lost'
             console.log('You lost.')
           break;
           case 'error':
@@ -103,4 +126,11 @@ playWord: function(word) {
 }
 }
   });
+
+var splits;
+if ((splits = window.location.href.split("#")) && splits.length > 1)
+{
+  MESYEUX.goPrivate(splits[1].substr(4));
+}
+
 }
