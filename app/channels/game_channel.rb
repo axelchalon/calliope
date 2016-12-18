@@ -11,7 +11,9 @@ class GameChannel < ApplicationCable::Channel
 
   def go(data)
     if (data["play_against_computer"].present?)
-      ai = Player.create!(username: "Computer", password: rand(100000..999999)) # @TODO add flag ai
+      ai = Player.create!(username: "Computer",
+                          password: rand(100000..999999),
+                          ai: true)
       ai.username = "Computer #" + ai.id.to_s
       ai.save!
       ActionModels::Game.start(uuid, ai.id)

@@ -18,7 +18,9 @@ module ApplicationCable
           current_player
         else
           puts "Curent player GUEST"
-          player = Player.create!(username: "Guest", password: rand(100000..999999)) # @TODO add flag guest
+          player = Player.create!(username: "Guest",
+                                  password: rand(100000..999999),
+                                  guest: true)
           player.username = "Guest #" + player.id.to_s
           player.save!
           player
