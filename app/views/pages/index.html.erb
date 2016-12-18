@@ -54,7 +54,7 @@
 				</div>
 
 			</div>
-			<div class="game-board__abandon hvr-grow" href="/">Abandonner ?</div>
+			<div class="game-board__abandon hvr-grow" onclick="alert('Abandonner n\'est jamais une option.')" href="/">Abandonner ?</div>
 
 		</div>
 
@@ -72,7 +72,13 @@
 		Pensez à un mot qui commence par la dernière lettre du mot de votre adversaire.
 	</div>
 
-	<input type="text" v-model="myName" class="form" placeholder="Pseudonyme" />
+	<% if !current_player %>
+	<input type="text" v-model="myName" class="form" placeholder="Pseudonyme"/>
+	<% else %>
+	<script>
+	window.guest_username = <%= current_player.username.to_json.html_safe %>;
+	</script>
+	<% end %>
 
 	<button @click="screen = 'rules'">
 		Règles du jeu
@@ -89,31 +95,18 @@
 	<button @click="goSolo()">
 		Jouer contre l'ordinateur
 	</button>
-</div>
 
-<div class="home__container" v-show="screen == 'login'">
-	<h1 class="h1__title"> Connectez vous</h1>
+	<%= link_to('Se connecter', new_player_session_path, :class => "subrepticement bloc") %>
 
+	<%= link_to('Pas encore de compte ? Inscrivez-vous !', new_player_registration_path, :class => "subrepticement bloc") %>
 
-	<form class="form spacing"> Pseudonyme  </form>
-
-	<form class="form spacing"> email </form>
-
-	<form class="form spacing"> Mot de passe  </form>
-
-	<br><br><br>
-
-	<button>
-		Terminé
-	</button>
-
-
+	<%= link_to('Se retirer du conclave', destroy_player_session_path, :method => :delete, :class => "subrepticement bloc") %>
 </div>
 
 <!-- ////// RULES BOX ////// -->
 
 <div class="home__container" v-show="screen == 'rules'">
-	<h1 class="h1__title"> Les règles du Shiritori</h1>
+	<h1 class="h1__title">Les règles du Shiritori</h1>
 
 	<div class="rules__textContent">
 

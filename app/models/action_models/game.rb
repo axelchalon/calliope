@@ -30,9 +30,7 @@ class ActionModels::Game
     ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", opponent_name: Player.find_by(id: p0.to_i).username, first_letter: first_letter}
 
     p0_is_ai = Player.find_by(id: p0).username.starts_with?("Computer") #TODO check if .ai
-    p1_is_ai = Player.find_by(id: p1).username.starts_with?("Computer") #TODO check if .ai
     ai_play(p0, first_letter) if p0_is_ai
-    ai_play(p1, first_letter) if p1_is_ai
   end
 
 

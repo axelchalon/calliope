@@ -16,7 +16,7 @@ window.onload = () => {
     data: {
       screen: 'home',
       gameLink: false,
-      myName: '',
+      myName: window.guest_username || '',
       myPoints: 0,
       opponentName: '',
       opponentPoints: 0,
