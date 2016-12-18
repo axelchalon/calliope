@@ -135,41 +135,50 @@ class ActionModels::Game
       return
     end
 
-    # Check if word is valid
-    if (!ShiritoriService.instance.is_this_word_french?(word))
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word.", short: "invalidWord"}
-      return
-    end
-
-    # Check if word has already been played
-    p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
-    p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
-    if (p0_words.include?(word) || p1_words.include?(word))
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Word has already been played.", short: "alreadyUsed"}
-      if opponent_is_ai
-        puts "Opponent who failed is AI; playing."
-        ai_play(opponent,REDIS.get("game_#{game_id}_last_letter"))
+    if (word != false)
+      # Check if word is valid
+      if (!ShiritoriService.instance.is_this_word_french?(word))
+        ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word.", short: "invalidWord"}
+        return
       end
-      return
-    end
 
-    # Check last letter
-    if (REDIS.get("game_#{game_id}_last_letter") != word[0])
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Wrong first letter", short: "wrongFirstLetter"}
-      return
+      # Check if word has already been played
+      p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
+      p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
+      if (p0_words.include?(word) || p1_words.include?(word))
+        ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Word has already been played.", short: "alreadyUsed"}
+        if opponent_is_ai
+          puts "Opponent who failed is AI; playing."
+          ai_play(opponent,REDIS.get("game_#{game_id}_last_letter"))
+        end
+        return
+      end
+
+      # Check last letter
+      if (REDIS.get("game_#{game_id}_last_letter") != word[0])
+        ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Wrong first letter", short: "wrongFirstLetter"}
+        return
+      end
     end
 
     # OK. Commit the move.
     REDIS.set("game_#{game_id}_next_px", px == "0" ? "1" : "0")
-    REDIS.set("game_#{game_id}_last_letter", word[-1])
+
+    if (word != false)
+      REDIS.set("game_#{game_id}_last_letter", word[-1])
+    end
     REDIS.rpush("game_#{game_id}_p#{px}_words",word)
     update_last_move_timestamp(game_id)
 
     old_score = REDIS.get("game_#{game_id}_p#{px}_score").to_i
     old_timestamp = REDIS.get("game_#{game_id}_last_move_timestamp").to_i
-    plus_points = word.length*3 + (Time.now.to_i - old_timestamp)
-    new_points = old_score + plus_points
-    REDIS.set("game_#{game_id}_p#{px}_score",new_points)
+    new_points = old_score
+
+    if (word != false)
+      plus_points = word.length*3 + (Time.now.to_i - old_timestamp)
+      new_points = old_score + plus_points
+      REDIS.set("game_#{game_id}_p#{px}_score",new_points)
+    end
 
     ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_played", msg: word, points: new_points}
     ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points, msg: word}
@@ -185,7 +194,7 @@ class ActionModels::Game
 
     if opponent_is_ai
       puts "Opponent is AI; playing."
-      ai_play(opponent,word[-1])
+      ai_play(opponent,REDIS.get("game_#{game_id}_last_letter"))
     end
   end
 

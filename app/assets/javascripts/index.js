@@ -25,7 +25,8 @@ window.onload = () => {
       words: [],
       type: '',
       yourTurn: false,
-      currentWord: ''
+      currentWord: '',
+      skipTimeout: -1
     },
     ready: function() {
     console.log('ready freddy')
@@ -76,20 +77,27 @@ go: function(guest_name, play_against_computer = false, type = "public", opponen
             thisVue.firstLetter = data.first_letter.toUpperCase()
             console.log('Game starts. You are ' + data.role + '. Opponent name: ' + data.opponent_name + ". First letter: " + data.first_letter)
             thisVue.yourTurn = data.role == 'p0'
+            if (thisVue.yourTurn)
+              thisVue.skipTimeout = setTimeout(() => thisVue.playWord(false), 15000)
           break;
           case 'word_accepted':
             thisVue.myPoints = data.points;
             thisVue.gameError = ''
-            thisVue.words.push({word: data.msg, by: "me"})
-            thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
+            thisVue.words.push({word: data.msg || 'PASSE', by: "me"})
+            if (data.msg !== false)
+              thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
             console.log('OK. You now have ' + data.points + ' points');
           break;
           case 'opponent_played':
             thisVue.opponentPoints = data.points;
-            thisVue.words.push({word: data.msg, by: "opponent"})
-            thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
+            thisVue.words.push({word: data.msg || 'PASSE', by: "opponent"})
+            if (data.msg !== false)
+              thisVue.firstLetter = data.msg.slice(-1).toUpperCase()
             thisVue.yourTurn = true
             console.log('Opponent plays: ' + data.msg + ' ; now has ' + data.points + ' points');
+
+            clearTimeout(thisVue.skipTimeout)
+            thisVue.skipTimeout = setTimeout(() => thisVue.playWord(false), 15000)
           break;
           case 'opponent_forfeits':
             thisVue.screen = 'game-won'
