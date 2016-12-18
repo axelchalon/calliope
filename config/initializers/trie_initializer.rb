@@ -1,6 +1,8 @@
 # Initialize the Trie data structure containing
 # calliope's dictionnary
 
+REFERENCE_TO_SHIRITORI_SERVICE_TO_PREVENT_GARBAGE_COLLECTION = ShiritoriService.instance
+
 Rails.application.config.after_initialize do
   SHIRITORI_DIC = get_shiritori_dic()
   ShiritoriService.instance.set_dic(SHIRITORI_DIC)
@@ -10,6 +12,7 @@ def get_shiritori_dic
   require 'trie'
   dicpath = Rails.root.join('lib', 'assets', 'gutenberg-utf8.txt')
 
+  # @TODO JARTE MOI CA @cc @morgan
   do_benchmark = false
   if do_benchmark
     puts "yolo"
