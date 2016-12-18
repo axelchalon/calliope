@@ -43,10 +43,45 @@ class ActionModels::Game
     end
   end
 
-  def self.listenToHim()
-    # @TODO commit to database analytics
-    # @TODO préparer variables pour morgan via dumpx
-    # @TODO morgan
+  # pids: pids = REDIS.lrange("game_#{game_id}_pids",0,-1), # Get all player ids
+  #   p0_score: p0_score = REDIS.get("game_#{game_id}_p0_score"),
+  #   p1_score: p1_score = REDIS.get("game_#{game_id}_p1_score"),
+  #   next_px: next_px = REDIS.get("game_#{game_id}_next_px"),
+  #   last_letter:last_letter = REDIS.get("game_#{game_id}_last_letter"),
+  #   last_move_timestamp: last_move_timestamp = REDIS.get("game_#{game_id}_last_move_timestamp"),
+  #   p0_words: p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1),
+  #   p1_words: p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
+  #   }
+
+  def self.listenToHim(game_id, winner_pid, loser_pid, winner_px)
+
+    loser_px = (winner_px.to_i + 1) % 2
+
+    winner_score = REDIS.get("game_#{game_id}_p#{winner_px}_score")
+    loser_score = REDIS.get("game_#{game_id}_p#{loser_px}_score")
+
+    # replace guests and ai by MasterPlayers
+    # @todo utiliser une méthode dans Player
+    if Player.find(winner_pid).guest
+      winner_pid = Player.where(username: "MasterGuest").first.id
+    elsif Player.find(winner_pid).ai
+      winner_pid = Player.where(username: "MasterAi").first.id
+    end
+    if Player.find(loser_pid).guest
+      loser_pid = Player.where(username: "MasterGuest").first.id
+    elsif Player.find(loser_pid).ai
+      loser_pid = Player.where(username: "MasterAi").first.id
+    end
+
+    # Store the game
+    game = ::Game.create!(
+        player1_id: winner_pid.to_i,
+        player1_score: winner_score.to_i,
+        player2_id: loser_pid.to_i,
+        player2_score: loser_score.to_i
+      )
+
+    # Store words
   end
 
   def self.shootTheMessenger(uuid)
@@ -145,7 +180,7 @@ class ActionModels::Game
       ActionCable.server.broadcast "player_#{pid}", {action: "you_won"}
       ActionCable.server.broadcast "player_#{opponent}", {action: "you_lost"}
       puts "The music is over."
-      listenToHim()
+      listenToHim(game_id, pid, opponent, px)
       shootTheMessenger(pid)
       return
     end

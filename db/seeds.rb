@@ -5,3 +5,13 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# Guest players for AI and Guest games storage
+masterGuest = Player.create!(
+  username: "MasterGuest",
+  password: "NUvpàçHvpç!",
+  guest: true)
+masterAi = Player.create!(
+  username: "MasterAi",
+  password: "NUvpàçHvpç!",
+  ai: true)

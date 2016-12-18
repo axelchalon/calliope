@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218104246) do
+ActiveRecord::Schema.define(version: 20161218141503) do
 
   create_table "games", force: :cascade do |t|
     t.integer  "player1_id"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20161218104246) do
     t.boolean  "guest",                  default: false
     t.boolean  "ai",                     default: false
     t.index ["reset_password_token"], name: "index_players_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_players_on_username", unique: true
   end
 
 end
