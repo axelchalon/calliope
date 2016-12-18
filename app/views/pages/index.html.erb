@@ -1,6 +1,56 @@
-<h1>Hellooola !</h1>
-
 <div id="vue-index">
+
+	<div class="game__container" v-show="screen == 'game-seeking'">
+		<p class="xcenter">
+			En attente de joueur...
+			<span v-if="gameLink">
+				Invitez un ami à rejoindre la partie :
+				{{ gameLink }}
+			</span>
+		</p>
+	</div>
+
+	<div class="game__container" v-show="screen == 'game-game'">
+		<div class="game-score__container myScore winning losing notPlaying">
+			<p class="player">{{myName}}</p>
+			<p class="score">{{myPoints}}</p>
+		</div>
+
+		<div class="game-board">
+			<div class="game-board__error">
+				{{firstLetter}}...
+				 <p class="game-board__error__alreadyWritten" v-show="gameError == 'alreadyUsed'">
+				 	Attention ! Ce mot à déjà été utilisé.
+				 </p>
+				 <p class="game-board__error__doesntExist" v-show="gameError == 'invalidWord'">
+				 	Attention ! Ce mot n'existe pas.
+				 </p>
+				 <p class="game-board__error__doesntExist" v-show="gameError == 'notYourTurn'">
+				 	Attention ! Ce n'est pas à vous de jouer.
+					</p>
+				 <p class="game-board__error__doesntExist" v-show="gameError == 'wrongFirstLetter'">
+				 	Attention ! Votre mot doit commencer par la lettre {{ firstLetter }}
+				 </p>
+			 </div>
+			 <div class="game-board__playBox">
+				<div class="game-board__writtingBox"><input type="text" v-model="currentWord" @keyup.enter="playWord(currentWord)"></div>
+				<div class="game-board__timer">5</div>
+			</div>
+			<div class="game-board__archive">
+				<div :class="{'game-board__previousWord__adversary': word.by == 'opponent', 'game-board__previousWord__player': word.by == 'me'}" v-for="word in wordsReversed">
+					{{ word.word }}
+				</div>
+
+			</div>
+			<div class="game-board__abandon hvr-grow">Abandonner ?</div>
+
+		</div>
+
+		<div class="game-score__container adversaryScore winning losing notPlaying">
+			<p class="player">{{opponentName}}</p>
+			<p class="score">{{opponentPoints}}</p>
+		</div>
+	</div>
 
 <!-- ////// HOME ////// -->
 <div class="home__container" v-show="screen == 'home'">
@@ -10,7 +60,7 @@
 		Pensez à un mot qui commence par la dernière lettre du mot de votre adversaire.
 	</div>
 
-	<form class="form"> Pseudonyme </form>
+	<input type="text" v-model="myName" class="form" placeholder="Pseudonyme" />
 
 	<button @click="screen = 'rules'">
 		Règles du jeu
@@ -20,7 +70,7 @@
 		Jouer en mode multi-joueur
 	</button>
 
-	<button>
+	<button @click="goSolo()">
 		Jouer en mode solo
 	</button>
 </div>

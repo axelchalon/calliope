@@ -28,7 +28,7 @@
 	font-weight: 900;
 }
 
-// ------ GAME-BOARD  ------ 
+// ------ GAME-BOARD  ------
 
 .game-board{
 	//position
@@ -56,7 +56,7 @@
 }
 .game-board__error__alreadyWritten{
 	//position
-	display: none;
+	//display: none;
 }
 
 .game-board__error__doesntExist{
@@ -141,9 +141,9 @@
 	//position
 	margin-top: 15px;
 	margin-left: auto;
-	margin-right: auto; 
+	margin-right: auto;
 	display: block;
-	
+
 	//content
 	font-size: 14px;
 	text-align: left;
@@ -163,7 +163,7 @@
 }
 
 
-// ------ SCORE ------ 
+// ------ SCORE ------
 
 .player{
 	//style
@@ -187,7 +187,7 @@
 	font-size: 54px;
 	}
 
-// SCORE STATUS 
+// SCORE STATUS
 
 .winning{
 	color: #6DBC79;
@@ -202,3 +202,7 @@ color: #C64F4F;
 	color: #969696;
 }
 
+// MISC
+
+.game__container { position: relative; }
+.xcenter { position: absolute; top: 50%; left: 0; right: 0; text-align: center; transform: translateY(-50%); }

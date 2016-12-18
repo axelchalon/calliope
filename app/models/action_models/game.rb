@@ -57,19 +57,19 @@ class ActionModels::Game
     elsif (pids[1] == pid)
       px = "1"
     else
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not in the game"}
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not in the game", short: "notInGame"}
       return
     end
 
     # Check ob er dran ist
     if (REDIS.get("game_#{game_id}_next_px") != px)
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not your turn"}
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Not your turn", short: "notYourTurn"}
       return
     end
 
     # Check if word is valid
     if (!ShiritoriService.instance.is_this_word_french?(word))
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word."}
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Invalid word.", short: "invalidWord"}
       return
     end
 
@@ -77,7 +77,7 @@ class ActionModels::Game
     p0_words = REDIS.lrange("game_#{game_id}_p0_words",0,-1)
     p1_words = REDIS.lrange("game_#{game_id}_p1_words",0,-1)
     if (p0_words.include?(word) || p1_words.include?(word))
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Word has already been played."}
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Word has already been played.", short: "alreadyUsed"}
       if opponent_is_ai
         puts "Opponent who failed is AI; playing."
         ai_play(opponent,REDIS.get("game_#{game_id}_last_letter"))
@@ -87,7 +87,7 @@ class ActionModels::Game
 
     # Check last letter
     if (REDIS.get("game_#{game_id}_last_letter") != word[0])
-      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Wrong first letter"}
+      ActionCable.server.broadcast "player_#{pid}", {action: "error", msg: "Wrong first letter", short: "wrongFirstLetter"}
       return
     end
 
@@ -104,7 +104,7 @@ class ActionModels::Game
     REDIS.set("game_#{game_id}_p#{px}_score",new_points)
 
     ActionCable.server.broadcast "player_#{opponent}", {action: "opponent_played", msg: word, points: new_points}
-    ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points}
+    ActionCable.server.broadcast "player_#{pid}", {action: "word_accepted", points: new_points, msg: word}
 
     if (new_points > 120)
       ActionCable.server.broadcast "player_#{pid}", {action: "you_won"}
