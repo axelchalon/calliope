@@ -30,6 +30,9 @@
 
 		<div class="game-board">
 			<div class="game-board__error">
+				<p v-if="yourTurn">
+				À votre tour ! &Eacute;crivez un mot commençant par la lettre
+				</p>
 				{{firstLetter}}...
 				 <p class="game-board__error__alreadyWritten" v-show="gameError == 'alreadyUsed'">
 				 	Attention ! Ce mot à déjà été utilisé.
@@ -46,7 +49,7 @@
 			 </div>
 			 <div class="game-board__playBox">
 				<div class="game-board__writtingBox"><input type="text" v-model="currentWord" @keyup.enter="playWord(currentWord)" v-bind:disabled="!yourTurn"></div>
-				<div class="game-board__timer">5</div>
+				<div class="game-board__timer"><span v-if="yourTurn">{{ timer }}</span></div>
 			</div>
 			<div class="game-board__archive">
 				<div :class="{'game-board__previousWord__adversary': word.by == 'opponent', 'game-board__previousWord__player': word.by == 'me'}" v-for="word in wordsReversed">
