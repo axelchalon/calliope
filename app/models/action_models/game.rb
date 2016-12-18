@@ -26,8 +26,8 @@ class ActionModels::Game
     first_letter = ('a'..'z').to_a.sample
     REDIS.set("game_#{game_id}_last_letter",first_letter)
 
-    ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", opponent_name: Player.find_by(id: p1.to_i).username, first_letter: first_letter}
-    ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", opponent_name: Player.find_by(id: p0.to_i).username, first_letter: first_letter}
+    ActionCable.server.broadcast "player_#{p0}", {action: "game_starts", role: "p0", opponent_name: Player.find_by(id: p1.to_i).username.split("%")[0], first_letter: first_letter}
+    ActionCable.server.broadcast "player_#{p1}", {action: "game_starts", role: "p1", opponent_name: Player.find_by(id: p0.to_i).username.split("%")[0], first_letter: first_letter}
 
     p0_is_ai = Player.find_by(id: p0).ai
     ai_play(p0, first_letter) if p0_is_ai

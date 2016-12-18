@@ -18,11 +18,9 @@ module ApplicationCable
           current_player
         else
           puts "Curent player GUEST"
-          player = Player.create!(username: "Guest",
+          player = Player.create!(username: "Inconnu%" + SecureRandom.uuid,
                                   password: rand(100000..999999),
                                   guest: true)
-          player.username = "Guest #" + player.id.to_s
-          player.save!
           player
           # reject_unauthorized_connection
         end
