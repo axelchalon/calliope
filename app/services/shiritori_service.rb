@@ -25,7 +25,7 @@ class ShiritoriService
   end
 
   def is_this_word_french? word
-    @dic.has_key? word
+    @dic.has_key? word.downcase
   end
 
   def random_word_starting_with(last_letter)
