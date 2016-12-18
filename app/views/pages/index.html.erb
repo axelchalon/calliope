@@ -96,11 +96,15 @@
 		Jouer contre l'ordinateur
 	</button>
 
-	<%= link_to('Se connecter', new_player_session_path, :class => "subrepticement bloc") %>
+	<% if (!current_player) %>
+		<%= link_to('Se connecter', new_player_session_path, :class => "subrepticement bloc") %>
 
-	<%= link_to('Pas encore de compte ? Inscrivez-vous !', new_player_registration_path, :class => "subrepticement bloc") %>
+		<%= link_to('Pas encore de compte ? Inscrivez-vous !', new_player_registration_path, :class => "subrepticement bloc") %>
+	<% end %>
 
-	<%= link_to('Se retirer du conclave', destroy_player_session_path, :method => :delete, :class => "subrepticement bloc") %>
+	<% if (current_player) %>
+		<%= link_to('Se retirer du conclave', destroy_player_session_path, :method => :delete, :class => "subrepticement bloc") %>
+	<% end %>
 </div>
 
 <!-- ////// RULES BOX ////// -->
